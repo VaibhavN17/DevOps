@@ -1,168 +1,672 @@
+<!-- Chosen Palette: Warm Stone & Traffic Amber (Minimalist Tech) -->
+<!-- Application Structure Plan: 
+    1. Hero Section: High-level executive summary and project hook.
+    2. "The Logic Engine" (Interactive Workflow): A vertical interactive flow diagram. Users click through the pipeline stages (Input -> Detect -> ROI -> Rule -> Log) to understand the system's "Brain". This replaces static diagrams.
+    3. "Performance Lab" (Data Analysis): An interactive dashboard allowing users to toggle between "Optimal Conditions" and "Challenging Conditions" (Night/Rain) to see how accuracy metrics shift. This turns the "Limitations" section into an exploration.
+    4. "Under the Hood" (Tech & Arch): A tabbed interface to explore Directory Structure, Tech Stack, and Hardware without cluttering the page.
+    5. "Project Roadmap" (Timeline): A horizontal scrollable or grid-based timeline to visualize the 7-week execution plan.
+    6. "Future Vision": Grid cards for future enhancements.
+-->
+<!-- Visualization & Content Choices:
+    1. Logic Engine: Uses CSS Grid and JS-driven DOM updates to show step-by-step processing logic. Justification: Flows are best understood actively.
+    2. Performance Lab: Chart.js Bar Chart. Interaction: Buttons to switch datasets (Day vs Night). Justification: Visualizing the drop in accuracy makes the "Limitations" section concrete and honest.
+    3. Roadmap: Styled HTML/Tailwind Grid. Interaction: Hover effects to reveal sub-tasks.
+    4. Icons: FontAwesome (CDN) for visual cues (Camera, Brain, Save).
+    5. Layout: Responsive container with Tailwind. No SVG graphics used.
+-->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <title>DevOps Visual Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Traffic Violation Detection System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
         body {
-            font-family: Arial, sans-serif;
-            background: #0f172a;
-            color: #e5e7eb;
-            margin: 0;
-            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            background-color: #fafaf9; /* stone-50 */
+            color: #1c1917; /* stone-900 */
         }
 
-        h1,
-        h2 {
-            text-align: center;
-            color: #38bdf8;
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
         }
 
-        .pipeline {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 30px;
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
         }
 
-        .stage {
-            background: #1e293b;
-            border: 2px solid #38bdf8;
-            border-radius: 10px;
-            width: 180px;
-            margin: 10px;
-            padding: 15px;
-            text-align: center;
+        .step-active {
+            border-left: 4px solid #d97706; /* amber-600 */
+            background-color: #fffbeb; /* amber-50 */
         }
 
-        .stage h3 {
-            margin-top: 0;
-            color: #facc15;
+        .tab-active {
+            border-bottom: 2px solid #d97706;
+            color: #d97706;
+            font-weight: 600;
         }
 
-        .stage p {
-            font-size: 14px;
-            line-height: 1.4;
-        }
-
-        .loop {
-            text-align: center;
-            margin-top: 40px;
-            font-size: 16px;
-            color: #a5b4fc;
-        }
-
-        .tools {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 30px;
-        }
-
-        .tool {
-            background: #020617;
-            border: 1px dashed #22d3ee;
-            border-radius: 8px;
-            width: 200px;
-            margin: 10px;
-            padding: 12px;
-            font-size: 14px;
-        }
-
-        .tool-link {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .tool-link .tool {
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .tool-link .tool:hover {
-            transform: scale(1.03);
-            box-shadow: 0 0 10px #22d3ee;
+        .transition-all {
+            transition-property: all;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 300ms;
         }
     </style>
 </head>
+<body class="antialiased selection:bg-amber-100 selection:text-amber-900">
 
-<body>
-
-    <h1>DevOps – Visual Explanation</h1>
-    <p style="text-align:center;">Everything automated. Everyone calmer. Mostly.</p>
-
-    <h2>DevOps Lifecycle</h2>
-    <div class="pipeline">
-        <div class="stage">
-            <h3>Plan</h3>
-            <p>Requirements, tasks, sprint planning</p>
-        </div>
-        <div class="stage">
-            <h3>Code</h3>
-            <p>Developers write code and push to Git</p>
-        </div>
-        <div class="stage">
-            <h3>Build</h3>
-            <p>Compile and package the application</p>
-        </div>
-        <div class="stage">
-            <h3>Test</h3>
-            <p>Automated unit & integration testing</p>
-        </div>
-        <div class="stage">
-            <h3>Release</h3>
-            <p>Prepare build for deployment</p>
-        </div>
-        <div class="stage">
-            <h3>Deploy</h3>
-            <p>Deploy to production automatically</p>
-        </div>
-        <div class="stage">
-            <h3>Operate</h3>
-            <p>Run and maintain the system</p>
-        </div>
-        <div class="stage">
-            <h3>Monitor</h3>
-            <p>Logs, metrics, alerts, performance</p>
-        </div>
-    </div>
-
-    <div class="loop">
-        🔁 Continuous Feedback → Improve → Repeat Forever
-    </div>
-
-    <h2>DevOps Key Concepts</h2>
-    <div class="tools">
-        <a href="ci.html" class="tool-link">
-            <div class="tool">
-                <b>CI</b><br>
-                Automatic build & test on every code push
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-stone-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <i class="fa-solid fa-traffic-light text-amber-600 text-2xl mr-3"></i>
+                    <span class="font-bold text-lg tracking-tight text-stone-800">TrafficAI <span class="text-stone-400 font-light">Monitor</span></span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-stone-600">
+                    <a href="#overview" class="hover:text-amber-600 transition-colors">Overview</a>
+                    <a href="#workflow" class="hover:text-amber-600 transition-colors">Logic Flow</a>
+                    <a href="#performance" class="hover:text-amber-600 transition-colors">Performance</a>
+                    <a href="#specs" class="hover:text-amber-600 transition-colors">Tech Specs</a>
+                    <a href="#roadmap" class="hover:text-amber-600 transition-colors">Roadmap</a>
+                </div>
             </div>
-        </a>
+        </div>
+    </nav>
 
-        <div class="tool">
-            <b>CD</b><br>
-            Automatic delivery or deployment
+    <!-- Hero Section -->
+    <header id="overview" class="bg-white border-b border-stone-200">
+        <div class="max-w-5xl mx-auto px-4 py-16 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-stone-900 mb-6 tracking-tight">
+                Automated Traffic Rule <br class="hidden sm:block" />
+                <span class="text-amber-600">Violation Detection System</span>
+            </h1>
+            <p class="mt-4 text-xl text-stone-500 max-w-3xl mx-auto leading-relaxed">
+                Leveraging <strong>Computer Vision</strong> and <strong>Deep Learning (YOLO)</strong> to automate road safety enforcement. 
+                Detects helmet violations, signal jumps, and triple riding in real-time, removing human error from surveillance.
+            </p>
+            
+            <div class="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+                <div class="p-4 bg-stone-50 rounded-lg border border-stone-100">
+                    <div class="text-amber-600 font-bold text-2xl">YOLO</div>
+                    <div class="text-xs text-stone-500 uppercase tracking-wide mt-1">Object Detection</div>
+                </div>
+                <div class="p-4 bg-stone-50 rounded-lg border border-stone-100">
+                    <div class="text-amber-600 font-bold text-2xl">OpenCV</div>
+                    <div class="text-xs text-stone-500 uppercase tracking-wide mt-1">Image Processing</div>
+                </div>
+                <div class="p-4 bg-stone-50 rounded-lg border border-stone-100">
+                    <div class="text-amber-600 font-bold text-2xl">95%</div>
+                    <div class="text-xs text-stone-500 uppercase tracking-wide mt-1">Vehicle Accuracy</div>
+                </div>
+                <div class="p-4 bg-stone-50 rounded-lg border border-stone-100">
+                    <div class="text-amber-600 font-bold text-2xl">15s</div>
+                    <div class="text-xs text-stone-500 uppercase tracking-wide mt-1">Evidence Clip</div>
+                </div>
+            </div>
         </div>
-        <div class="tool">
-            <b>Containers</b><br>
-            Same app, same behavior everywhere
-        </div>
-        <div class="tool">
-            <b>Orchestration</b><br>
-            Manage containers at scale
-        </div>
-        <div class="tool">
-            <b>Infrastructure as Code</b><br>
-            Servers defined using config files
-        </div>
-        <div class="tool">
-            <b>Monitoring</b><br>
-            Observe system health in real-time
-        </div>
-    </div>
+    </header>
 
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-20">
+
+        <!-- SECTION: Workflow Logic (Interactive) -->
+        <section id="workflow" class="scroll-mt-20">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-stone-900">System Workflow Logic</h2>
+                <p class="mt-3 text-lg text-stone-600 max-w-3xl">
+                    Understand the decision-making pipeline. Click on each stage below to see how raw video footage is transformed into actionable evidence. This is the core "Brain" of the application.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Left: Interactive Steps -->
+                <div class="lg:col-span-4 space-y-3">
+                    <button onclick="updateWorkflow(0)" id="step-btn-0" class="workflow-btn w-full text-left p-4 rounded-lg border border-stone-200 hover:bg-stone-50 transition-all step-active group">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 rounded-full bg-stone-200 text-stone-600 flex items-center justify-center font-bold mr-3 group-hover:bg-amber-200 transition-colors">1</div>
+                            <div>
+                                <h3 class="font-semibold text-stone-900">Input Acquisition</h3>
+                                <p class="text-xs text-stone-500">CCTV / Dashcam / RTSP</p>
+                            </div>
+                        </div>
+                    </button>
+                    <button onclick="updateWorkflow(1)" id="step-btn-1" class="workflow-btn w-full text-left p-4 rounded-lg border border-stone-200 hover:bg-stone-50 transition-all group">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 rounded-full bg-stone-200 text-stone-600 flex items-center justify-center font-bold mr-3 group-hover:bg-amber-200 transition-colors">2</div>
+                            <div>
+                                <h3 class="font-semibold text-stone-900">Object Detection</h3>
+                                <p class="text-xs text-stone-500">YOLO Model Inference</p>
+                            </div>
+                        </div>
+                    </button>
+                    <button onclick="updateWorkflow(2)" id="step-btn-2" class="workflow-btn w-full text-left p-4 rounded-lg border border-stone-200 hover:bg-stone-50 transition-all group">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 rounded-full bg-stone-200 text-stone-600 flex items-center justify-center font-bold mr-3 group-hover:bg-amber-200 transition-colors">3</div>
+                            <div>
+                                <h3 class="font-semibold text-stone-900">ROI Filtering</h3>
+                                <p class="text-xs text-stone-500">Stop Lines & Signal Zones</p>
+                            </div>
+                        </div>
+                    </button>
+                    <button onclick="updateWorkflow(3)" id="step-btn-3" class="workflow-btn w-full text-left p-4 rounded-lg border border-stone-200 hover:bg-stone-50 transition-all group">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 rounded-full bg-stone-200 text-stone-600 flex items-center justify-center font-bold mr-3 group-hover:bg-amber-200 transition-colors">4</div>
+                            <div>
+                                <h3 class="font-semibold text-stone-900">Rule Engine</h3>
+                                <p class="text-xs text-stone-500">Boolean Logic Checks</p>
+                            </div>
+                        </div>
+                    </button>
+                    <button onclick="updateWorkflow(4)" id="step-btn-4" class="workflow-btn w-full text-left p-4 rounded-lg border border-stone-200 hover:bg-stone-50 transition-all group">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 rounded-full bg-stone-200 text-stone-600 flex items-center justify-center font-bold mr-3 group-hover:bg-amber-200 transition-colors">5</div>
+                            <div>
+                                <h3 class="font-semibold text-stone-900">Evidence Logging</h3>
+                                <p class="text-xs text-stone-500">Save Image & Clip</p>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Right: Dynamic Details -->
+                <div class="lg:col-span-8 bg-white rounded-xl border border-stone-200 shadow-sm p-8 flex flex-col justify-center min-h-[400px]">
+                    <div id="workflow-content" class="space-y-6 animate-fade-in">
+                        <!-- Content injected by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: Performance Lab (Charts) -->
+        <section id="performance" class="scroll-mt-20">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                <div>
+                    <h2 class="text-3xl font-bold text-stone-900">Performance & Limitations</h2>
+                    <p class="mt-3 text-lg text-stone-600 max-w-2xl">
+                        Model accuracy varies significantly based on environmental factors. Use the toggle to simulate performance in different conditions.
+                    </p>
+                </div>
+                <div class="bg-stone-100 p-1 rounded-lg inline-flex">
+                    <button onclick="updateChart('optimal')" id="btn-optimal" class="px-4 py-2 rounded-md text-sm font-medium bg-white text-stone-900 shadow-sm transition-all">
+                        <i class="fa-regular fa-sun mr-2 text-amber-500"></i>Optimal (Day)
+                    </button>
+                    <button onclick="updateChart('challenging')" id="btn-challenging" class="px-4 py-2 rounded-md text-sm font-medium text-stone-500 hover:text-stone-900 transition-all">
+                        <i class="fa-solid fa-cloud-rain mr-2 text-blue-500"></i>Challenging (Night/Rain)
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Chart Container -->
+                <div class="md:col-span-2 bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+                    <h3 class="text-lg font-semibold text-stone-800 mb-4">Detection Accuracy by Violation Type</h3>
+                    <div class="chart-container">
+                        <canvas id="accuracyChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Key Metrics Cards -->
+                <div class="space-y-4">
+                    <div class="bg-amber-50 p-6 rounded-xl border border-amber-100">
+                        <h4 class="text-amber-800 font-semibold text-sm uppercase tracking-wide">Primary Constraint</h4>
+                        <p class="text-3xl font-bold text-amber-900 mt-2" id="metric-constraint">Lighting</p>
+                        <p class="text-stone-600 text-sm mt-2">
+                            Performance degrades significantly below 10 lux (night) or in heavy rain/fog.
+                        </p>
+                    </div>
+                    
+                    <div class="bg-stone-50 p-6 rounded-xl border border-stone-200">
+                        <h4 class="text-stone-500 font-semibold text-sm uppercase tracking-wide">Hardware Requirement</h4>
+                        <div class="flex items-center mt-2">
+                            <i class="fa-solid fa-microchip text-2xl text-stone-700 mr-3"></i>
+                            <div>
+                                <p class="font-bold text-stone-900">GTX 1650+</p>
+                                <p class="text-xs text-stone-500">Recommended for 30 FPS</p>
+                            </div>
+                        </div>
+                    </div>
+
+                     <div class="bg-stone-50 p-6 rounded-xl border border-stone-200">
+                        <h4 class="text-stone-500 font-semibold text-sm uppercase tracking-wide">Deployment</h4>
+                        <div class="flex items-center mt-2">
+                            <i class="fa-solid fa-video text-2xl text-stone-700 mr-3"></i>
+                            <div>
+                                <p class="font-bold text-stone-900">Fixed Angle</p>
+                                <p class="text-xs text-stone-500">Required for Stop Line logic</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: Technical Architecture (Tabs) -->
+        <section id="specs" class="scroll-mt-20">
+            <h2 class="text-3xl font-bold text-stone-900 mb-6">Technical Specifications</h2>
+            
+            <div class="bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden">
+                <!-- Tabs -->
+                <div class="flex border-b border-stone-200 overflow-x-auto">
+                    <button onclick="switchTab('stack')" id="tab-stack" class="flex-1 py-4 px-6 text-sm font-medium text-stone-500 hover:text-stone-700 hover:bg-stone-50 transition-colors tab-active">Software Stack</button>
+                    <button onclick="switchTab('dir')" id="tab-dir" class="flex-1 py-4 px-6 text-sm font-medium text-stone-500 hover:text-stone-700 hover:bg-stone-50 transition-colors">Directory Structure</button>
+                    <button onclick="switchTab('logic')" id="tab-logic" class="flex-1 py-4 px-6 text-sm font-medium text-stone-500 hover:text-stone-700 hover:bg-stone-50 transition-colors">Core Logic Snippets</button>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="p-6 md:p-8 min-h-[300px]">
+                    
+                    <!-- Stack Content -->
+                    <div id="content-stack" class="block animate-fade-in">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div class="p-4 border border-stone-100 rounded-lg bg-stone-50">
+                                <h4 class="font-bold text-stone-900 mb-2">Core Framework</h4>
+                                <ul class="space-y-2 text-sm text-stone-600">
+                                    <li><i class="fa-brands fa-python text-amber-500 w-5"></i> Python 3.9+</li>
+                                    <li><i class="fa-solid fa-eye text-blue-500 w-5"></i> OpenCV (Computer Vision)</li>
+                                    <li><i class="fa-solid fa-network-wired text-green-500 w-5"></i> YOLO v8/v10 (Deep Learning)</li>
+                                </ul>
+                            </div>
+                            <div class="p-4 border border-stone-100 rounded-lg bg-stone-50">
+                                <h4 class="font-bold text-stone-900 mb-2">Data & Training</h4>
+                                <ul class="space-y-2 text-sm text-stone-600">
+                                    <li><i class="fa-solid fa-table text-stone-400 w-5"></i> NumPy & Pandas</li>
+                                    <li><i class="fa-brands fa-google text-red-500 w-5"></i> Google Colab (Training)</li>
+                                    <li><i class="fa-solid fa-database text-stone-400 w-5"></i> Custom Dataset (Roboflow)</li>
+                                </ul>
+                            </div>
+                             <div class="p-4 border border-stone-100 rounded-lg bg-stone-50">
+                                <h4 class="font-bold text-stone-900 mb-2">Classes Detectable</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-2 py-1 bg-white border border-stone-200 rounded text-xs">Car</span>
+                                    <span class="px-2 py-1 bg-white border border-stone-200 rounded text-xs">Motorbike</span>
+                                    <span class="px-2 py-1 bg-white border border-stone-200 rounded text-xs">Truck/Bus</span>
+                                    <span class="px-2 py-1 bg-white border border-stone-200 rounded text-xs">Person</span>
+                                    <span class="px-2 py-1 bg-white border border-stone-200 rounded text-xs">Traffic Light</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Directory Content -->
+                    <div id="content-dir" class="hidden animate-fade-in">
+                        <div class="bg-stone-900 rounded-lg p-6 font-mono text-sm text-stone-300 overflow-x-auto">
+                            <p class="text-amber-500 font-bold mb-2">Traffic-Violation-Detection/</p>
+                            <div class="pl-4 border-l border-stone-700 space-y-1">
+                                <p>├── <span class="text-blue-400">data/</span> <span class="text-stone-500"># Video/Image assets</span></p>
+                                <p>├── <span class="text-blue-400">models/</span></p>
+                                <div class="pl-4 border-l border-stone-700">
+                                    <p>├── yolo.weights</p>
+                                    <p>├── yolo.cfg</p>
+                                    <p>└── classes.txt</p>
+                                </div>
+                                <p>├── <span class="text-blue-400">detection/</span> <span class="text-stone-500"># Core CV modules</span></p>
+                                <div class="pl-4 border-l border-stone-700">
+                                    <p>├── vehicle_detection.py</p>
+                                    <p>├── helmet_detection.py</p>
+                                    <p>└── signal_detection.py</p>
+                                </div>
+                                <p>├── <span class="text-blue-400">rules/</span></p>
+                                <div class="pl-4 border-l border-stone-700">
+                                    <p>└── violation_rules.py <span class="text-stone-500"># Logic engine</span></p>
+                                </div>
+                                <p>├── <span class="text-blue-400">utils/</span> <span class="text-stone-500"># Helpers</span></p>
+                                <p>└── <span class="text-green-400">app.py</span> <span class="text-stone-500"># Main Entry Point</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Logic Content -->
+                    <div id="content-logic" class="hidden animate-fade-in">
+                        <div class="space-y-6">
+                            <div>
+                                <h4 class="font-bold text-stone-900 mb-2 flex items-center"><i class="fa-solid fa-motorcycle mr-2 text-stone-500"></i> Triple Riding Logic</h4>
+                                <div class="bg-stone-50 p-4 rounded border border-stone-200 font-mono text-sm text-stone-700">
+                                    <span class="text-purple-600">if</span> motorbike_detected:<br>
+                                    &nbsp;&nbsp;riders = <span class="text-blue-600">count_people_in_bbox</span>(motorbike_roi)<br>
+                                    &nbsp;&nbsp;<span class="text-purple-600">if</span> riders > <span class="text-amber-600">2</span>:<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-red-600">flag_violation</span>("Triple Riding")
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-stone-900 mb-2 flex items-center"><i class="fa-solid fa-traffic-light mr-2 text-stone-500"></i> Signal Jump Logic</h4>
+                                <div class="bg-stone-50 p-4 rounded border border-stone-200 font-mono text-sm text-stone-700">
+                                    signal_state = <span class="text-blue-600">get_signal_color</span>(hsv_frame)<br>
+                                    <span class="text-purple-600">if</span> signal_state == <span class="text-red-600">"RED"</span> <span class="text-purple-600">and</span> vehicle_y > stop_line_y:<br>
+                                    &nbsp;&nbsp;<span class="text-red-600">flag_violation</span>("Signal Jump")
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: Project Roadmap -->
+        <section id="roadmap" class="scroll-mt-20">
+            <h2 class="text-3xl font-bold text-stone-900 mb-8">Execution Roadmap (7 Weeks)</h2>
+            
+            <div class="relative">
+                <!-- Line -->
+                <div class="absolute left-4 md:left-1/2 h-full w-0.5 bg-stone-200 -translate-x-1/2 hidden md:block"></div>
+                
+                <div class="space-y-8">
+                    <!-- Phase 1 -->
+                    <div class="relative flex flex-col md:flex-row items-center justify-between group">
+                        <div class="order-1 md:w-5/12 text-left md:text-right pr-0 md:pr-8">
+                            <h3 class="text-xl font-bold text-stone-900">Phase 1: Setup</h3>
+                            <p class="text-stone-500 text-sm">Week 1-2</p>
+                            <p class="mt-2 text-stone-600">Environment configuration. Installing OpenCV, YOLO, and verifying GPU acceleration.</p>
+                        </div>
+                        <div class="order-1 md:w-auto p-2 bg-stone-50 border-2 border-stone-200 rounded-full z-10 group-hover:border-amber-500 transition-colors">
+                            <div class="w-4 h-4 bg-stone-400 rounded-full group-hover:bg-amber-500 transition-colors"></div>
+                        </div>
+                        <div class="order-1 md:w-5/12 pl-0 md:pl-8 mt-4 md:mt-0 w-full">
+                            <!-- Spacer for layout balance -->
+                        </div>
+                    </div>
+
+                    <!-- Phase 2 -->
+                    <div class="relative flex flex-col md:flex-row items-center justify-between group">
+                        <div class="order-1 md:w-5/12 text-left md:text-right pr-0 md:pr-8 md:order-1 mt-4 md:mt-0 w-full">
+                             <!-- Spacer -->
+                        </div>
+                        <div class="order-1 md:w-auto p-2 bg-stone-50 border-2 border-stone-200 rounded-full z-10 group-hover:border-amber-500 transition-colors">
+                            <div class="w-4 h-4 bg-stone-400 rounded-full group-hover:bg-amber-500 transition-colors"></div>
+                        </div>
+                        <div class="order-1 md:w-5/12 pl-0 md:pl-8">
+                            <h3 class="text-xl font-bold text-stone-900">Phase 2: Data</h3>
+                            <p class="text-stone-500 text-sm">Week 3</p>
+                            <p class="mt-2 text-stone-600">Collecting and annotating dataset. Labeling images for helmet vs no-helmet.</p>
+                        </div>
+                    </div>
+
+                    <!-- Phase 3 -->
+                    <div class="relative flex flex-col md:flex-row items-center justify-between group">
+                        <div class="order-1 md:w-5/12 text-left md:text-right pr-0 md:pr-8">
+                            <h3 class="text-xl font-bold text-stone-900">Phase 3: Core Detection</h3>
+                            <p class="text-stone-500 text-sm">Week 4-5</p>
+                            <p class="mt-2 text-stone-600">Developing `vehicle_detection.py` and implementing object tracking logic.</p>
+                        </div>
+                        <div class="order-1 md:w-auto p-2 bg-stone-50 border-2 border-stone-200 rounded-full z-10 group-hover:border-amber-500 transition-colors">
+                            <div class="w-4 h-4 bg-stone-400 rounded-full group-hover:bg-amber-500 transition-colors"></div>
+                        </div>
+                        <div class="order-1 md:w-5/12 pl-0 md:pl-8 mt-4 md:mt-0 w-full">
+                            <!-- Spacer -->
+                        </div>
+                    </div>
+
+                    <!-- Phase 4 -->
+                    <div class="relative flex flex-col md:flex-row items-center justify-between group">
+                        <div class="order-1 md:w-5/12 text-left md:text-right pr-0 md:pr-8 md:order-1 mt-4 md:mt-0 w-full">
+                             <!-- Spacer -->
+                        </div>
+                        <div class="order-1 md:w-auto p-2 bg-stone-50 border-2 border-stone-200 rounded-full z-10 group-hover:border-amber-500 transition-colors">
+                            <div class="w-4 h-4 bg-stone-400 rounded-full group-hover:bg-amber-500 transition-colors"></div>
+                        </div>
+                        <div class="order-1 md:w-5/12 pl-0 md:pl-8">
+                            <h3 class="text-xl font-bold text-stone-900">Phase 4: Rule Engine</h3>
+                            <p class="text-stone-500 text-sm">Week 6</p>
+                            <p class="mt-2 text-stone-600">Coding the boolean logic. Integrating ROI triggers and signal states.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: Future Scope -->
+        <section class="border-t border-stone-200 pt-12">
+            <h2 class="text-2xl font-bold text-stone-900 mb-6">Future Enhancements</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-6 bg-white border border-stone-200 rounded-lg hover:shadow-md transition-shadow">
+                    <div class="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 mb-4">
+                        <i class="fa-solid fa-car-side"></i>
+                    </div>
+                    <h3 class="font-bold text-stone-900">ANPR Integration</h3>
+                    <p class="text-sm text-stone-500 mt-2">Automatic Number Plate Recognition to directly link violations to vehicle owners.</p>
+                </div>
+                <div class="p-6 bg-white border border-stone-200 rounded-lg hover:shadow-md transition-shadow">
+                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mb-4">
+                        <i class="fa-solid fa-microchip"></i>
+                    </div>
+                    <h3 class="font-bold text-stone-900">Edge Deployment</h3>
+                    <p class="text-sm text-stone-500 mt-2">Porting model to NVIDIA Jetson Nano for decentralized, on-site processing.</p>
+                </div>
+                <div class="p-6 bg-white border border-stone-200 rounded-lg hover:shadow-md transition-shadow">
+                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-4">
+                        <i class="fa-solid fa-gauge-high"></i>
+                    </div>
+                    <h3 class="font-bold text-stone-900">Speed Estimation</h3>
+                    <p class="text-sm text-stone-500 mt-2">Using optical flow algorithms to estimate vehicle velocity without radar guns.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-900 text-stone-400 py-12 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="font-medium text-stone-200">AI-Based Traffic Rule Violation Detection System</p>
+            <p class="text-sm mt-2">Computer Vision & Deep Learning Final Year Project</p>
+            <div class="mt-8 text-xs text-stone-600">
+                Generated based on Technical Project Report
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- DATA & CONTENT ---
+        
+        const workflowData = [
+            {
+                title: "1. Input Acquisition",
+                icon: "fa-video",
+                desc: "The system ingests video feeds from RTSP-enabled IP cameras, CCTV footage, or pre-recorded dashcam videos. High resolution is preferred for better ANPR and helmet detection.",
+                tech: "OpenCV `cv2.VideoCapture`",
+                output: "Raw Frames (RGB)"
+            },
+            {
+                title: "2. Object Detection",
+                icon: "fa-crosshairs",
+                desc: "The YOLO (You Only Look Once) model scans the frame. It detects multiple classes simultaneously: vehicles (cars, buses, bikes), persons, and traffic signals.",
+                tech: "YOLO v8 / v10",
+                output: "Bounding Boxes `[x, y, w, h, class_id]`"
+            },
+            {
+                title: "3. ROI Filtering",
+                icon: "fa-crop-simple",
+                desc: "We don't need to analyze the whole screen. We define Regions of Interest (ROI) like 'Signal Zone' (top corners) and 'Stop Line' (bottom road area) to filter irrelevant detections.",
+                tech: "NumPy Slicing / Polygon Masks",
+                output: "Filtered Objects"
+            },
+            {
+                title: "4. Rule Engine",
+                icon: "fa-scale-balanced",
+                desc: "The logic core. Example: IF `bike` contains > 2 `persons` -> Flag Triple Riding. IF `signal` is RED AND `car_y` > `stop_line_y` -> Flag Signal Jump.",
+                tech: "Python Conditional Logic",
+                output: "Violation Trigger (True/False)"
+            },
+            {
+                title: "5. Evidence Logging",
+                icon: "fa-file-image",
+                desc: "When a violation triggers, the system saves the current frame (screenshot) and buffers 10-15 seconds of video surrounding the event into a timestamped folder.",
+                tech: "OpenCV `VideoWriter`",
+                output: "`/violations/date/time.mp4`"
+            }
+        ];
+
+        const chartData = {
+            optimal: {
+                label: "Optimal Conditions (Day)",
+                data: [95, 93, 92, 90], // Vehicle, Triple, Helmet, Signal
+                color: 'rgba(217, 119, 6, 0.7)', // Amber
+                borderColor: 'rgba(217, 119, 6, 1)'
+            },
+            challenging: {
+                label: "Challenging (Night/Rain)",
+                data: [80, 75, 65, 60], // Drops in accuracy
+                color: 'rgba(59, 130, 246, 0.7)', // Blue
+                borderColor: 'rgba(59, 130, 246, 1)'
+            }
+        };
+
+        // --- WORKFLOW INTERACTIVITY ---
+
+        function updateWorkflow(index) {
+            // Update UI buttons
+            document.querySelectorAll('.workflow-btn').forEach((btn, i) => {
+                if (i === index) {
+                    btn.classList.add('step-active', 'bg-amber-50');
+                } else {
+                    btn.classList.remove('step-active', 'bg-amber-50');
+                }
+            });
+
+            // Update Content Area with Animation
+            const contentDiv = document.getElementById('workflow-content');
+            const data = workflowData[index];
+            
+            contentDiv.innerHTML = `
+                <div class="flex items-start space-x-4 animate-fade-in">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 text-xl">
+                        <i class="fa-solid ${data.icon}"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-stone-900">${data.title}</h3>
+                        <p class="mt-2 text-stone-600 leading-relaxed">${data.desc}</p>
+                        
+                        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-3 bg-stone-50 rounded border border-stone-200">
+                                <span class="text-xs font-bold text-stone-400 uppercase">Technology</span>
+                                <div class="text-stone-800 font-mono text-sm mt-1">${data.tech}</div>
+                            </div>
+                            <div class="p-3 bg-stone-50 rounded border border-stone-200">
+                                <span class="text-xs font-bold text-stone-400 uppercase">Output</span>
+                                <div class="text-stone-800 font-mono text-sm mt-1">${data.output}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- CHART LOGIC ---
+
+        let accuracyChart;
+
+        function initChart() {
+            const ctx = document.getElementById('accuracyChart').getContext('2d');
+            
+            accuracyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Vehicle Detection', 'Triple Riding', 'Helmet Detection', 'Signal Violation'],
+                    datasets: [{
+                        label: chartData.optimal.label,
+                        data: chartData.optimal.data,
+                        backgroundColor: chartData.optimal.color,
+                        borderColor: chartData.optimal.borderColor,
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: { display: true, text: 'Accuracy (%)' }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y + '% Accuracy';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChart(mode) {
+            const data = chartData[mode];
+            
+            // Update Chart
+            accuracyChart.data.datasets[0].label = data.label;
+            accuracyChart.data.datasets[0].data = data.data;
+            accuracyChart.data.datasets[0].backgroundColor = data.color;
+            accuracyChart.data.datasets[0].borderColor = data.borderColor;
+            accuracyChart.update();
+
+            // Update UI Buttons
+            const btnOpt = document.getElementById('btn-optimal');
+            const btnChal = document.getElementById('btn-challenging');
+            
+            if (mode === 'optimal') {
+                btnOpt.classList.add('bg-white', 'text-stone-900', 'shadow-sm');
+                btnOpt.classList.remove('text-stone-500');
+                btnChal.classList.remove('bg-white', 'text-stone-900', 'shadow-sm');
+                btnChal.classList.add('text-stone-500');
+                
+                // Update text metric context
+                document.getElementById('metric-constraint').textContent = "Lighting";
+                document.getElementById('metric-constraint').parentElement.querySelector('p:last-child').textContent = "Performance degrades significantly below 10 lux (night) or in heavy rain/fog.";
+            } else {
+                btnChal.classList.add('bg-white', 'text-stone-900', 'shadow-sm');
+                btnChal.classList.remove('text-stone-500');
+                btnOpt.classList.remove('bg-white', 'text-stone-900', 'shadow-sm');
+                btnOpt.classList.add('text-stone-500');
+
+                // Update text metric context
+                document.getElementById('metric-constraint').textContent = "Weather";
+                document.getElementById('metric-constraint').parentElement.querySelector('p:last-child').textContent = "Rain occludes lenses and blurs object edges, reducing YOLO confidence scores.";
+            }
+        }
+
+        // --- TAB LOGIC ---
+        function switchTab(tabId) {
+            // Reset Tabs
+            ['stack', 'dir', 'logic'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.remove('tab-active');
+                document.getElementById(`content-${t}`).classList.add('hidden');
+                document.getElementById(`content-${t}`).classList.remove('block');
+            });
+
+            // Activate Tab
+            document.getElementById(`tab-${tabId}`).classList.add('tab-active');
+            document.getElementById(`content-${tabId}`).classList.remove('hidden');
+            document.getElementById(`content-${tabId}`).classList.add('block');
+        }
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            updateWorkflow(0);
+            initChart();
+        });
+
+    </script>
 </body>
-
 </html>
